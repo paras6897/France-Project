@@ -79,33 +79,41 @@ body.scroll-active .scroll-rail{opacity:1}
 </head>
 <body>
 <!-- 1. Translation Buttons -->
-<button onclick="translatePage('es')">Translate to Spanish</button>
-<button onclick="translatePage('fr')">Translate to French</button>
-<button onclick="translatePage('de')">Translate to German</button>
-<button onclick="resetLanguage()">Original Language</button>
+<button type="button" onclick="translatePage('en')">English</button>
+<button type="button" onclick="translatePage('es')">Spanish</button>
+<button type="button" onclick="translatePage('de')">German</button>
+<button type="button" onclick="resetLanguage()">Original (French)</button>
 
-<!-- 2. Hidden container needed by Google Translate -->
+<!-- 2. Hidden container -->
 <div id="google_translate_element" style="display:none;"></div>
 
-<!-- 3. Translation Script -->
+<!-- 3. Google Translate Script -->
 <script type="text/javascript">
   function googleTranslateElementInit() {
     new google.translate.TranslateElement({
-      pageLanguage: 'en',
+      pageLanguage: 'fr', // French source language
       autoDisplay: false
     }, 'google_translate_element');
   }
 
   function translatePage(langCode) {
-    // Sets the translation cookie: /source_language/target_language
-    document.cookie = `googtrans=/en/${langCode}; path=/;`;
-    location.reload();
+    const select = document.querySelector('.goog-te-combo');
+    if (select) {
+      select.value = langCode;
+      select.dispatchEvent(new Event('change'));
+    }
   }
 
   function resetLanguage() {
-    // Clears the translation cookie to restore original text
-    document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    location.reload();
+    const iframe = document.querySelector('iframe.goog-te-banner-frame');
+    if (iframe) {
+      const innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+      const restoreBtn = innerDoc.querySelector('.goog-close-link, #\\:1\\.restore');
+      if (restoreBtn) restoreBtn.click();
+    } else {
+      document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      location.reload();
+    }
   }
 </script>
 <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
