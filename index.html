@@ -78,6 +78,37 @@ body.scroll-active .scroll-rail{opacity:1}
 </style>
 </head>
 <body>
+ <!-- 1. Translation Buttons -->
+<button onclick="translatePage('es')">Translate to Spanish</button>
+<button onclick="translatePage('fr')">Translate to French</button>
+<button onclick="translatePage('de')">Translate to German</button>
+<button onclick="resetLanguage()">Original Language</button>
+
+<!-- 2. Hidden container needed by Google Translate -->
+<div id="google_translate_element" style="display:none;"></div>
+
+<!-- 3. Translation Script -->
+<script type="text/javascript">
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+      pageLanguage: 'en',
+      autoDisplay: false
+    }, 'google_translate_element');
+  }
+
+  function translatePage(langCode) {
+    // Sets the translation cookie: /source_language/target_language
+    document.cookie = `googtrans=/en/${langCode}; path=/;`;
+    location.reload();
+  }
+
+  function resetLanguage() {
+    // Clears the translation cookie to restore original text
+    document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    location.reload();
+  }
+</script>
+<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 <div class="app">
 <header class="top">
 <div class="logo"><div class="seal">V</div><div><b>Le Pendule de la Vertu</b><small>édition web · 1750—1799</small></div></div>
