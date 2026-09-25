@@ -77,45 +77,7 @@ body.scroll-active .scroll-rail{opacity:1}
 
 </style>
 </head>
-<body>
-<!-- 1. Translation Buttons -->
-<button type="button" onclick="translatePage('en')">English</button>
-<button type="button" onclick="translatePage('es')">Spanish</button>
-<button type="button" onclick="translatePage('de')">German</button>
-<button type="button" onclick="resetLanguage()">Original (French)</button>
-
-<!-- 2. Hidden container -->
-<div id="google_translate_element" style="display:none;"></div>
-
-<!-- 3. Google Translate Script -->
-<script type="text/javascript">
-  function googleTranslateElementInit() {
-    new google.translate.TranslateElement({
-      pageLanguage: 'fr', // French source language
-      autoDisplay: false
-    }, 'google_translate_element');
-  }
-
-  function translatePage(langCode) {
-    const select = document.querySelector('.goog-te-combo');
-    if (select) {
-      select.value = langCode;
-      select.dispatchEvent(new Event('change'));
-    }
-  }
-
-  function resetLanguage() {
-    const iframe = document.querySelector('iframe.goog-te-banner-frame');
-    if (iframe) {
-      const innerDoc = iframe.contentDocument || iframe.contentWindow.document;
-      const restoreBtn = innerDoc.querySelector('.goog-close-link, #\\:1\\.restore');
-      if (restoreBtn) restoreBtn.click();
-    } else {
-      document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-      location.reload();
-    }
-  }
-</script>
+<Body>
 <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 <div class="app">
 <header class="top">
