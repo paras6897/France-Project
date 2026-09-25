@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#171514">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; worker-src 'self' blob: https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://cdnjs.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests">
 <title>Le Pendule de la Vertu — Édition Web</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Mono:wght@400;500&family=Inter:wght@400;600;700&display=swap');
@@ -23,6 +25,56 @@ footer{background:#1a1816;color:#aaa198;text-align:center;padding:28px;font:9px 
 @media(max-width:600px){.top{height:60px;padding:0 10px;gap:8px}.seal{width:34px;height:34px}.hero{padding:35px 16px 24px}.hero h1{font-size:55px}.viewer-wrap{padding:0 8px 30px}.stage{padding:6px;min-height:240px}.vfoot{padding:8px}.vfoot>div:first-child{display:none}.info{padding:8px 8px 50px}.card{padding:17px}.btn{padding:7px 8px}}
 
 .compliance{padding:0 clamp(10px,5vw,70px) 80px;display:grid;grid-template-columns:1fr 1fr;gap:16px}.compliance .wide{grid-column:1/-1}.lead{font-size:16px!important}.checks{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:18px}.checks div,.vocab div,.plan div{background:#fffaf0;border:1px solid #c8baa2;border-radius:10px;padding:12px}.checks b,.vocab b,.plan b{display:block;font-family:var(--serif);font-size:18px}.checks span,.vocab span,.plan span{display:block;margin-top:4px;color:#625a4e;font-size:12px;line-height:1.45}.vocab{display:grid;grid-template-columns:1fr 1fr;gap:8px}.refs{padding-left:20px;line-height:1.8;color:#514a42}.note{font:10px var(--mono)!important;color:#786e61!important}.plan{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}@media(max-width:900px){.compliance{grid-template-columns:1fr}.compliance .wide{grid-column:auto}.checks,.plan{grid-template-columns:1fr}}@media(max-width:600px){.compliance{padding:0 8px 50px}.vocab{grid-template-columns:1fr}}
+
+/* Immersive dual-view system */
+.modebar{display:flex;align-items:center;gap:8px;margin-top:22px;position:relative;z-index:2}
+.modebtn{border:1px solid #9e9078;background:#fffaf0b8;color:#2a2521;border-radius:999px;padding:10px 15px;font:600 10px var(--mono);letter-spacing:.06em;text-transform:uppercase;transition:.25s}
+.modebtn:hover{transform:translateY(-2px);box-shadow:0 10px 25px #3b2c1d18}
+.modebtn.active{background:#211e1b;color:#fff4e2;border-color:#a98e5b;box-shadow:0 8px 22px #211e1b22}
+.modehint{font:9px var(--mono);color:#756b5f}
+.scroll-view{display:none;padding:24px clamp(10px,5vw,70px) 90px;background:
+radial-gradient(circle at 82% 5%,#a21c1912,transparent 24%),
+radial-gradient(circle at 8% 32%,#a98e5b16,transparent 28%),
+linear-gradient(180deg,#181613 0%,#211d18 42%,#151311 100%);color:#f4eadb;position:relative;overflow:hidden}
+.scroll-view:before{content:"";position:absolute;inset:0;background-image:linear-gradient(#ffffff08 1px,transparent 1px),linear-gradient(90deg,#ffffff08 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(to bottom,transparent,#000 10%,#000 88%,transparent)}
+.scroll-intro{position:relative;max-width:1000px;margin:0 auto 38px;padding:36px 0 14px}
+.scroll-intro .eyebrow{font:10px var(--mono);letter-spacing:.18em;color:#d6b875;text-transform:uppercase}
+.scroll-intro h2{font:700 clamp(42px,7vw,82px)/.9 var(--serif);margin:12px 0;color:#fff4e3}
+.scroll-intro p{max-width:720px;color:#c7bcad;line-height:1.7;margin:0}
+.scroll-rail{position:fixed;right:22px;top:50%;transform:translateY(-50%);z-index:18;width:4px;height:180px;border-radius:99px;background:#ffffff18;overflow:hidden;opacity:0;pointer-events:none;transition:.3s}
+.scroll-rail i{display:block;width:100%;height:0;background:#d6b875;border-radius:99px}
+body.scroll-active .scroll-rail{opacity:1}
+.scroll-card{position:relative;max-width:1180px;margin:0 auto 70px;display:grid;grid-template-columns:minmax(0,1.55fr) minmax(260px,.65fr);gap:28px;align-items:center}
+.scroll-card:nth-of-type(even){grid-template-columns:minmax(260px,.65fr) minmax(0,1.55fr)}
+.scroll-card:nth-of-type(even) .scroll-paper{order:2}
+.scroll-card:nth-of-type(even) .scroll-copy{order:1}
+.scroll-paper{background:#efe7d8;padding:clamp(9px,1.2vw,15px);border:1px solid #9b8769;box-shadow:0 28px 80px #0009,0 0 0 1px #ffffff08;transform:rotate(-.35deg);transition:transform .5s,box-shadow .5s}
+.scroll-card:nth-of-type(even) .scroll-paper{transform:rotate(.35deg)}
+.scroll-card:hover .scroll-paper{transform:translateY(-6px) rotate(0);box-shadow:0 38px 90px #000b,0 0 0 1px #d6b87544}
+.scroll-paper canvas{display:block;width:100%;height:auto;background:#efe7d8}
+.scroll-copy{padding:18px 8px;position:relative}
+.scroll-num{font:10px var(--mono);color:#d6b875;letter-spacing:.14em}
+.scroll-copy h3{font:700 clamp(30px,4vw,48px)/.95 var(--serif);margin:10px 0 12px;color:#fff1dd}
+.scroll-copy p{margin:0;color:#c8bdb0;line-height:1.7;font-size:14px}
+.scroll-copy:before{content:"";display:block;width:44px;height:1px;background:#a21c19;margin-bottom:15px}
+.scroll-tag{display:inline-block;margin-top:18px;padding:7px 9px;border:1px solid #ffffff24;border-radius:99px;font:9px var(--mono);color:#d6b875}
+.scroll-loading{min-height:240px;display:grid;place-items:center;color:#766d61;font:10px var(--mono)}
+.scroll-active .viewer-wrap{display:none}
+.scroll-active .scroll-view{display:block}
+.scroll-active .hero{padding-bottom:28px;background:linear-gradient(180deg,#eee9dd,#d8cfbd)}
+.scroll-active .info{background:#eee9dd}
+@media(max-width:900px){
+ .modebar{flex-wrap:wrap}.modehint{width:100%}
+ .scroll-card,.scroll-card:nth-of-type(even){grid-template-columns:1fr;gap:12px;margin-bottom:52px}
+ .scroll-card:nth-of-type(even) .scroll-paper,.scroll-card:nth-of-type(even) .scroll-copy{order:initial}
+ .scroll-copy{padding:8px 2px 0}.scroll-paper{transform:none!important}
+ .scroll-rail{right:10px;height:130px}
+}
+@media(max-width:600px){
+ .modebtn{padding:9px 11px}.scroll-view{padding:10px 8px 60px}.scroll-intro{padding:26px 8px 8px}
+ .scroll-intro h2{font-size:48px}.scroll-card{margin-bottom:42px}.scroll-copy h3{font-size:34px}.scroll-copy p{font-size:13px}
+}
+
 </style>
 </head>
 <body>
@@ -35,12 +87,26 @@ footer{background:#1a1816;color:#aaa198;text-align:center;padding:28px;font:9px 
 <div class="grid">
 <aside class="side" id="nav"><h3>Parcours</h3></aside>
 <main>
-<section class="hero"><div class="kicker">Projet de civilisation · France</div><h1>Le Pendule<br><em>de la Vertu</em></h1><p>De la volupté du Rococo à la Terreur d'État : la naissance de l'art comme propagande en France (1750–1799).</p><div class="tags"><span class="tag">14 planches</span><span class="tag">Rococo → Révolution</span><span class="tag">édition interactive</span><span class="tag">mobile + ordinateur</span></div></section>
+<section class="hero"><div class="kicker">Projet de civilisation · France</div><h1>Le Pendule<br><em>de la Vertu</em></h1><p>De la volupté du Rococo à la Terreur d'État : la naissance de l'art comme propagande en France (1750–1799).</p><div class="tags"><span class="tag">14 planches</span><span class="tag">Rococo → Révolution</span><span class="tag">édition interactive</span><span class="tag">mobile + ordinateur</span></div>
+<div class="modebar" aria-label="Choisir le mode d'affichage">
+  <button class="modebtn active" id="modeViewer" type="button">◉ Vue exposition</button>
+  <button class="modebtn" id="modeScroll" type="button">↓ Lecture immersive</button>
+  <span class="modehint">Deux façons de découvrir les 14 planches.</span>
+</div></section>
 <section class="viewer-wrap" id="viewer"><div class="viewer">
 <div class="vhead"><span id="title">Le Pendule de la Vertu</span><span id="count">01 / 14</span></div>
 <div class="stage" id="stage"><div class="loading">Chargement de la planche…</div></div>
 <div class="vfoot"><span>← / → · glisser sur mobile · F = présentation</span><div class="mini"><button id="prev">←</button><button id="next">→</button><button id="pdf">Document source ↗</button></div></div>
 </div></section>
+<section class="scroll-view" id="scrollView" aria-label="Lecture immersive des 14 planches">
+  <div class="scroll-intro">
+    <div class="eyebrow">Lecture immersive · 14 chapitres</div>
+    <h2>Une histoire qui se déroule sous vos yeux.</h2>
+    <p>Faites défiler les planches comme une exposition éditoriale. Chaque page du document devient une scène indépendante, avec son titre, son rythme et son espace pour respirer.</p>
+  </div>
+  <div id="scrollCards"></div>
+</section>
+<div class="scroll-rail" aria-hidden="true"><i id="scrollProgress"></i></div>
 <section class="info">
 <article class="card wide"><h2>Une visite, pas seulement un PDF.</h2><p>Les 14 planches originales restent au centre de l'expérience, mais la navigation devient celle d'une petite exposition : chapitres, progression, raccourcis clavier, mode présentation, tactile mobile et accès direct au document source.</p><div class="quote">« Le luxe engendre l'art, et l'art engendre la vertu. »<small>Formule de lecture du projet — à replacer dans son contexte historique.</small></div></article>
 <article class="card"><h3>Le mouvement du pendule</h3><div class="timeline"><div class="event"><b>1750</b><small>ROCOCO</small><br>Volupté, salon, art pour le plaisir.</div><div class="event"><b>1760s</b><small>ENCYCLOPÉDIE</small><br>Le regard philosophique remet en cause les codes du luxe.</div><div class="event"><b>1770s–80s</b><small>RÉFORME</small><br>L'esthétique évolue vers une morale civique et néoclassique.</div><div class="event"><b>1793–94</b><small>TERREUR</small><br>L'art devient un instrument de mobilisation politique.</div><div class="event"><b>1799</b><small>BASCULE</small><br>La boucle se referme sur les tensions entre liberté, vertu et contrôle.</div></div></article>
@@ -89,5 +155,41 @@ $('#share').onclick=async()=>{try{await navigator.share({title:'Le Pendule de la
 addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='PageDown')go(pageNo+1);if(e.key==='ArrowLeft'||e.key==='PageUp')go(pageNo-1);if(e.key.toLowerCase()==='f')$('#full').click()});
 let sx=0;stage.addEventListener('touchstart',e=>sx=e.changedTouches[0].clientX,{passive:true});stage.addEventListener('touchend',e=>{let dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>45)go(pageNo+(dx<0?1:-1))},{passive:true});
 addEventListener('resize',()=>{clearTimeout(window.r);window.r=setTimeout(()=>draw(pageNo),180)});
+
+
+const scrollCards=$('#scrollCards'),scrollProgress=$('#scrollProgress'),modeViewer=$('#modeViewer'),modeScroll=$('#modeScroll');
+const renderedScroll=new Set(),scrollObserver=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{if(entry.isIntersecting){const n=+entry.target.dataset.page;renderScrollPage(n);}});
+},{rootMargin:'420px 0px'});
+function buildScroll(){
+  titles.forEach((t,i)=>{
+    const article=document.createElement('article');
+    article.className='scroll-card';article.dataset.page=i+1;
+    article.innerHTML='<div class="scroll-paper"><div class="scroll-loading">Chargement de la planche…</div></div><div class="scroll-copy"><div class="scroll-num">'+String(i+1).padStart(2,'0')+' / 14</div><h3>'+t[0]+'</h3><p>'+t[1]+'</p><span class="scroll-tag">Planche '+String(i+1).padStart(2,'0')+'</span></div>';
+    scrollCards.appendChild(article);scrollObserver.observe(article);
+  });
+}
+async function renderScrollPage(n){
+  if(renderedScroll.has(n)||!pdf)return;
+  renderedScroll.add(n);
+  const holder=scrollCards.querySelector('[data-page="'+n+'"] .scroll-paper');
+  try{
+    const p=await pdf.getPage(n),v=p.getViewport({scale:1}),maxW=Math.min(980,Math.max(300,scrollCards.clientWidth*.78)),scale=Math.min(maxW/v.width,1.45),vp=p.getViewport({scale});
+    const c=document.createElement('canvas');c.width=Math.floor(vp.width);c.height=Math.floor(vp.height);c.setAttribute('aria-label','Planche '+n);
+    holder.replaceChildren(c);await p.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;
+  }catch(err){renderedScroll.delete(n);holder.textContent='Impossible de charger cette planche.';}
+}
+function setMode(mode){
+  const scroll=mode==='scroll';
+  document.body.classList.toggle('scroll-active',scroll);
+  modeViewer.classList.toggle('active',!scroll);modeScroll.classList.toggle('active',scroll);
+  if(scroll){window.scrollTo({top:document.querySelector('.hero').offsetTop,behavior:'smooth'});scrollCards.querySelectorAll('.scroll-card').forEach(x=>scrollObserver.observe(x));}
+  else {draw(pageNo);window.scrollTo({top:document.querySelector('.hero').offsetTop,behavior:'smooth'});}
+  msg(scroll?'Lecture immersive activée':'Vue exposition activée');
+}
+modeViewer.onclick=()=>setMode('viewer');modeScroll.onclick=()=>setMode('scroll');
+addEventListener('scroll',()=>{if(!document.body.classList.contains('scroll-active'))return;const rect=scrollCards.getBoundingClientRect(),total=Math.max(1,scrollCards.scrollHeight-innerHeight),passed=Math.max(0,-rect.top+innerHeight*.18),pct=Math.min(100,passed/total*100);scrollProgress.style.height=pct+'%';},{passive:true});
+buildScroll();
+
 const lib=await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.6.82/pdf.min.mjs');lib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.6.82/pdf.worker.min.mjs';pdf=await lib.getDocument(PDF).promise;go(1);
 </script></body></html>
